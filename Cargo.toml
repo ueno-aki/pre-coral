@@ -1,0 +1,17 @@
+[workspace]
+members = [
+    "protocol",
+    "protocol-core",
+    "protocol-macros",
+    "protodef",
+    "raknet",
+]
+resolver = "2"
+
+[workspace.dependencies]
+anyhow = "1"
+protocol = { path = "./protocol"}
+protocol-core = { path = "./protocol-core"}
+protocol-macros = { path = "./protocol-macros" }
+protodef = { path = "./protodef" }
+raknet = { path = "./raknet" }

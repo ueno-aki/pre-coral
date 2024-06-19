@@ -1,0 +1,10 @@
+[package]
+name = "protocol-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow.workspace = true
+protocol-macros.workspace = true
+protodef.workspace = true
+uuid = { version = "1", features = [ "v4", "fast-rng", "macro-diagnostics" ] }
