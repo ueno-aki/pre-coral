@@ -1,5 +1,6 @@
 mod bool;
 mod integer;
+pub mod slice_codec;
 mod str;
 mod uuid;
 

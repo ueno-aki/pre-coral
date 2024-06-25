@@ -61,6 +61,7 @@ impl VariableInteger for Uvarlong {
 }
 
 impl PartialEq<u64> for Uvarlong {
+    #[inline]
     fn eq(&self, other: &u64) -> bool {
         PartialEq::eq(&self.0, other)
     }
@@ -78,10 +79,21 @@ impl From<u64> for Uvarlong {
         Self(value)
     }
 }
+impl From<Uvarlong> for u64 {
+    fn from(value: Uvarlong) -> Self {
+        value.0
+    }
+}
 impl From<usize> for Uvarlong {
     #[inline]
     fn from(value: usize) -> Self {
         Self(value as u64)
+    }
+}
+impl From<Uvarlong> for usize {
+    #[inline]
+    fn from(value: Uvarlong) -> Self {
+        value.0 as usize
     }
 }
 impl_ops!(Uvarlong);

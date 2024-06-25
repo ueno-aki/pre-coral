@@ -36,6 +36,7 @@ impl VariableInteger for Varint {
 }
 
 impl PartialEq<i32> for Varint {
+    #[inline]
     fn eq(&self, other: &i32) -> bool {
         PartialEq::eq(&self.0, other)
     }
@@ -53,19 +54,32 @@ impl From<i32> for Varint {
         Varint(value)
     }
 }
+impl From<Varint> for i32 {
+    #[inline]
+    fn from(value: Varint) -> Self {
+        value.0
+    }
+}
 impl TryFrom<usize> for Varint {
     type Error = anyhow::Error;
-
+    #[inline]
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         Ok(Self(value.try_into()?))
     }
 }
+impl TryFrom<Varint> for usize {
+    type Error = anyhow::Error;
+    #[inline]
+    fn try_from(value: Varint) -> Result<Self, Self::Error> {
+        Ok(value.0.try_into()?)
+    }
+}
 impl std::ops::Neg for Varint {
-    type Output = i32;
+    type Output = Self;
     #[inline]
     #[track_caller]
     fn neg(self) -> Self::Output {
-        -self.0
+        Self(-self.0)
     }
 }
 impl_ops!(Varint);

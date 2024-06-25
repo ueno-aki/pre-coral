@@ -61,6 +61,7 @@ impl VariableInteger for Uvarint {
 }
 
 impl PartialEq<u32> for Uvarint {
+    #[inline]
     fn eq(&self, other: &u32) -> bool {
         PartialEq::eq(&self.0, other)
     }
@@ -78,11 +79,23 @@ impl From<u32> for Uvarint {
         Self(value)
     }
 }
+impl From<Uvarint> for u32 {
+    #[inline]
+    fn from(value: Uvarint) -> Self {
+        value.0
+    }
+}
 impl TryFrom<usize> for Uvarint {
     type Error = anyhow::Error;
-
+    #[inline]
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         Ok(Self(value.try_into()?))
+    }
+}
+impl From<Uvarint> for usize {
+    #[inline]
+    fn from(value: Uvarint) -> Self {
+        value.0 as usize
     }
 }
 impl_ops!(Uvarint);

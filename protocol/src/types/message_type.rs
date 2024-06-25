@@ -1,7 +1,8 @@
-use anyhow::bail;
+use from_num::from_num;
 use protocol_core::{Decoder, Encoder};
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[from_num(u8)]
 pub enum MessageType {
     Raw = 0,
     Chat = 1,
@@ -30,21 +31,6 @@ impl Decoder for MessageType {
         R: protodef::ReadBytesExt,
         Self: Sized,
     {
-        use MessageType::*;
-        Ok(match r.read_u8()? {
-            0 => Raw,
-            1 => Chat,
-            2 => Translate,
-            3 => Popup,
-            4 => JukeboxPopup,
-            5 => Tip,
-            6 => SystemMessage,
-            7 => Whisper,
-            8 => Announcement,
-            9 => JsonWhisper,
-            10 => Json,
-            11 => JsonAnnouncement,
-            n => bail!("Cannot convert {n} into MessageType"),
-        })
+        MessageType::from_u8(r.read_u8()?)
     }
 }

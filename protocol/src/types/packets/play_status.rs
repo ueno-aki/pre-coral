@@ -1,7 +1,9 @@
-use anyhow::bail;
+use from_num::from_num;
 use protocol_core::{Decoder, Encoder};
 use protodef::BE;
 
+#[derive(Debug)]
+#[from_num(i32)]
 pub enum PlayStatus {
     LoginSuccess = 0,
     LoginFailedClientOld = 1,
@@ -26,19 +28,6 @@ impl Decoder for PlayStatus {
         R: protodef::ReadBytesExt,
         Self: Sized,
     {
-        use PlayStatus::*;
-        Ok(match r.read_i32::<BE>()? {
-            0 => LoginSuccess,
-            1 => LoginFailedClientOld,
-            2 => LoginFailedServerOld,
-            3 => PlayerSpawn,
-            4 => LoginFailedInvalidTenant,
-            5 => LoginFailedEditionMismatchEduToVanilla,
-            6 => LoginFailedEditionMismatchVanillaToEdu,
-            7 => LoginFailedServerFullSubClient,
-            8 => LoginFailedEditorMismatchEditorToVanilla,
-            9 => LoginFailedEditorMismatchVanillaToEditor,
-            n => bail!("Connot convert {n} into PlayStatus"),
-        })
+        PlayStatus::from_i32(r.read_i32::<BE>()?)
     }
 }

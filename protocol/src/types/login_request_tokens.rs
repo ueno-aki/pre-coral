@@ -1,7 +1,7 @@
 use protocol_core::{Decoder, Encoder};
 use protodef::{
     integer::Uvarint,
-    slice::{decode_i32slice, encode_i32slice},
+    slice::{read_i32buffer, write_i32buffer},
 };
 
 #[derive(Debug)]
@@ -17,11 +17,11 @@ impl Encoder for LoginRequestTokens {
         } = self;
         let buf = {
             let mut buf = Vec::new();
-            encode_i32slice(certificate_chain, &mut buf)?;
-            encode_i32slice(client_properties, &mut buf)?;
+            write_i32buffer(certificate_chain, &mut buf)?;
+            write_i32buffer(client_properties, &mut buf)?;
             buf
         };
-        Uvarint::try_from(buf.len())?.encode(w)?;
+        Uvarint::encode(buf.len().try_into()?, w)?;
         w.write_all(&buf)?;
         Ok(())
     }
@@ -33,8 +33,8 @@ impl Decoder for LoginRequestTokens {
         Self: Sized,
     {
         let _ = Uvarint::decode(r)?;
-        let certificate_chain = String::from_utf8(decode_i32slice(r)?)?;
-        let client_properties = String::from_utf8(decode_i32slice(r)?)?;
+        let certificate_chain = String::from_utf8(read_i32buffer(r)?)?;
+        let client_properties = String::from_utf8(read_i32buffer(r)?)?;
         Ok(Self {
             certificate_chain,
             client_properties,

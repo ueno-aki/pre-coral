@@ -5,7 +5,7 @@ use crate::{Decoder, Encoder};
 impl Encoder for String {
     fn encode<W: protodef::WriteBytesExt>(self, w: &mut W) -> anyhow::Result<()> {
         let bytes = self.as_bytes();
-        Uvarint::try_from(bytes.len())?.encode(w)?;
+        Uvarint::encode(bytes.len().try_into()?, w)?;
         w.write_all(bytes)?;
         Ok(())
     }

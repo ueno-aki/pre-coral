@@ -36,6 +36,7 @@ impl VariableInteger for Varlong {
 }
 
 impl PartialEq<i64> for Varlong {
+    #[inline]
     fn eq(&self, other: &i64) -> bool {
         PartialEq::eq(&self.0, other)
     }
@@ -48,23 +49,37 @@ impl Deref for Varlong {
     }
 }
 impl From<i64> for Varlong {
+    #[inline]
     fn from(value: i64) -> Self {
         Varlong(value)
     }
 }
+impl From<Varlong> for i64 {
+    #[inline]
+    fn from(value: Varlong) -> Self {
+        value.0
+    }
+}
 impl TryFrom<usize> for Varlong {
     type Error = anyhow::Error;
-
+    #[inline]
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         Ok(Self(value.try_into()?))
     }
 }
+impl TryFrom<Varlong> for usize {
+    type Error = anyhow::Error;
+    #[inline]
+    fn try_from(value: Varlong) -> Result<Self, Self::Error> {
+        Ok(value.0.try_into()?)
+    }
+}
 impl std::ops::Neg for Varlong {
-    type Output = i64;
+    type Output = Self;
     #[inline]
     #[track_caller]
     fn neg(self) -> Self::Output {
-        -self.0
+        Self(-self.0)
     }
 }
 impl_ops!(Varlong);
